@@ -33,9 +33,3 @@ class News(models.Model):
     def increment_views(self):
         self.news_views += 1
         self.save()
-
-class Item(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    amount = models.IntegerField()
-    description = models.TextField()

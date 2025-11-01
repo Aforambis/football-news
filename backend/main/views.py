@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from main.forms import NewsForm
 from main.models import News
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -11,9 +11,10 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from main.models import Item
-from main.forms import ItemForm
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.html import strip_tags
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -24,15 +25,12 @@ def show_main(request):
     else:
         news_list = News.objects.filter(user=request.user)
 
-    items = Item.objects.filter(user=request.user)
-
     context = {
         'npm': '240123456',
         'name': request.user.username,
         'class': 'PBP A',
         'news_list': news_list,
-        'last_login': request.COOKIES.get('last_login', 'Never'),
-        'items': items
+        'last_login': request.COOKIES.get('last_login', 'Never')
     }
     return render(request, "main.html",context)
 
@@ -68,8 +66,22 @@ def show_xml(request):
  
 def show_json(request):
     news_list = News.objects.all()
-    json_data = serializers.serialize("json", news_list)
-    return HttpResponse(json_data, content_type="application/json")
+    data = [
+        {
+            'id': str(news.id),
+            'title': news.title,
+            'content': news.content,
+            'category': news.category,
+            'thumbnail': news.thumbnail,
+            'news_views': news.news_views,
+            'created_at': news.created_at.isoformat() if news.created_at else None,
+            'is_featured': news.is_featured,
+            'user_id': news.user_id,
+        }
+        for news in news_list
+    ]
+
+    return JsonResponse(data, safe=False)
 
 def show_xml_by_id(request, news_id):
     try:
@@ -81,11 +93,22 @@ def show_xml_by_id(request, news_id):
     
 def show_json_by_id(request, news_id):
     try:
-       news_item = News.objects.get(pk=news_id)
-       json_data = serializers.serialize("json", [news_item])
-       return HttpResponse(json_data, content_type="application/json")
+        news = News.objects.select_related('user').get(pk=news_id)
+        data = {
+            'id': str(news.id),
+            'title': news.title,
+            'content': news.content,
+            'category': news.category,
+            'thumbnail': news.thumbnail,
+            'news_views': news.news_views,
+            'created_at': news.created_at.isoformat() if news.created_at else None,
+            'is_featured': news.is_featured,
+            'user_id': news.user_id,
+            'user_username': news.user.username if news.user_id else None,
+        }
+        return JsonResponse(data)
     except News.DoesNotExist:
-       return HttpResponse(status=404)
+        return JsonResponse({'detail': 'Not found'}, status=404)
     
 def register(request):
     form = UserCreationForm()
@@ -139,23 +162,24 @@ def delete_news(request, id):
     news.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
 
-@csrf_exempt 
-def add_item_ajax(request):
-    if request.method == 'POST':
-        form = ItemForm(request.POST)
-        if form.is_valid():
-            item = form.save(commit=False)
-            item.user = request.user
-            item.save()
-            return JsonResponse({"status": "success", "item": form.cleaned_data}, status=200)
-        else:
-            return JsonResponse({"status": "error", "errors": form.errors}, status=400)
-    return JsonResponse({"status": "error"}, status=400)
+@csrf_exempt
+@require_POST
+def add_news_entry_ajax(request):
+    title = strip_tags(request.POST.get("title"))
+    content = strip_tags(request.POST.get("content"))
+    category = request.POST.get("category")
+    thumbnail = request.POST.get("thumbnail")
+    is_featured = request.POST.get("is_featured") == 'on'  # checkbox handling
+    user = request.user
 
-def get_items_json(request):
-    items = Item.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('json', items), content_type="application/json")
+    new_news = News(
+        title=title, 
+        content=content,
+        category=category,
+        thumbnail=thumbnail,
+        is_featured=is_featured,
+        user=user
+    )
+    new_news.save()
 
-def get_items_xml(request):
-    items = Item.objects.filter(user=request.user)
-    return HttpResponse(serializers.serialize('xml', items), content_type="application/xml")
+    return HttpResponse(b"CREATED", status=201)
