@@ -1,0 +1,116 @@
+=== Sistem Persamaan Linear ===
+Masukkan ordo matriks persegi (n): 2
+Masukkan baris 1 dari matriks koefisien A (dipisah spasi): 1 -4
+Masukkan baris 2 dari matriks koefisien A (dipisah spasi): 0 2
+Masukkan vektor hasil b (dipisah spasi): 2 -8
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 1
+
+Pilih metode perhitungan determinan:
+1. Metode Kofaktor (rekursif)
+2. Metode Kombinatorik (permutaasi)
+Pilihan: 1
+
+Hasil solusi SPL menggunakan Aturan Cramer:
+  x1 = -14.00
+  x2 = -4.00
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 1
+
+Pilih metode perhitungan determinan:
+1. Metode Kofaktor (rekursif)
+2. Metode Kombinatorik (permutaasi)
+Pilihan: 2
+
+Hasil solusi SPL menggunakan Aturan Cramer:
+  x1 = -14.00
+  x2 = -4.00
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 2
+
+Hasil solusi SPL menggunakan Invers Matriks:
+  x1 = -14.00
+  x2 = -4.00
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 3
+
+=== Sistem Persamaan Linear ===
+Masukkan ordo matriks persegi (n): 3
+Masukkan baris 1 dari matriks koefisien A (dipisah spasi): 1 4 0
+Masukkan baris 2 dari matriks koefisien A (dipisah spasi): -9 11 7
+Masukkan baris 3 dari matriks koefisien A (dipisah spasi): 6 0 3
+Masukkan vektor hasil b (dipisah spasi): 4 -1 7
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 1
+
+Pilih metode perhitungan determinan:
+1. Metode Kofaktor (rekursif)
+2. Metode Kombinatorik (permutaasi)
+Pilihan: 1
+
+Hasil solusi SPL menggunakan Aturan Cramer:
+  x1 = 1.10
+  x2 = 0.72
+  x3 = 0.13
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 1
+
+Pilih metode perhitungan determinan:
+1. Metode Kofaktor (rekursif)
+2. Metode Kombinatorik (permutaasi)
+Pilihan: 2
+
+Hasil solusi SPL menggunakan Aturan Cramer:
+  x1 = 1.10
+  x2 = 0.72
+  x3 = 0.13
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 2
+
+Hasil solusi SPL menggunakan Invers Matriks:
+  x1 = 1.10
+  x2 = 0.72
+  x3 = 0.13
+
+Pilih metode penyelesaian:
+1. Menggunakan Determinan (Cramer)
+2. Menggunakan Invers Matriks 
+3. Masukkan SPL baru
+4. Keluar
+Pilihan: 4
+Program selesai.
