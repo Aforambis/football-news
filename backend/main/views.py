@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from main.forms import NewsForm
 from main.models import News
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
@@ -11,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from main.models import Item
+from main.forms import ItemForm
+from django.views.decorators.csrf import csrf_exempt
 
 @login_required(login_url='/login')
 def show_main(request):
@@ -21,12 +24,15 @@ def show_main(request):
     else:
         news_list = News.objects.filter(user=request.user)
 
+    items = Item.objects.filter(user=request.user)
+
     context = {
         'npm': '240123456',
         'name': request.user.username,
         'class': 'PBP A',
         'news_list': news_list,
-        'last_login': request.COOKIES.get('last_login', 'Never')
+        'last_login': request.COOKIES.get('last_login', 'Never'),
+        'items': items
     }
     return render(request, "main.html",context)
 
@@ -132,3 +138,24 @@ def delete_news(request, id):
     news = get_object_or_404(News, pk=id)
     news.delete()
     return HttpResponseRedirect(reverse('main:show_main'))
+
+@csrf_exempt 
+def add_item_ajax(request):
+    if request.method == 'POST':
+        form = ItemForm(request.POST)
+        if form.is_valid():
+            item = form.save(commit=False)
+            item.user = request.user
+            item.save()
+            return JsonResponse({"status": "success", "item": form.cleaned_data}, status=200)
+        else:
+            return JsonResponse({"status": "error", "errors": form.errors}, status=400)
+    return JsonResponse({"status": "error"}, status=400)
+
+def get_items_json(request):
+    items = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', items), content_type="application/json")
+
+def get_items_xml(request):
+    items = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('xml', items), content_type="application/xml")

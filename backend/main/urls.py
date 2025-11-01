@@ -3,6 +3,7 @@ from main.views import show_main, create_news
 from main.views import show_news, show_xml, show_json, show_xml_by_id, show_json_by_id
 from main.views import register, login_user, logout_user
 from main.views import edit_news, delete_news
+from main.views import add_item_ajax, get_items_json, get_items_xml
 
 app_name = 'main'
 
@@ -19,4 +20,7 @@ urlpatterns = [
     path('logout/', logout_user, name='logout'),
     path('news/<uuid:id>/edit', edit_news, name='edit_news'),
     path('news/<uuid:id>/delete', delete_news, name='delete_news'),
+    path('add-item-ajax/', add_item_ajax, name='add_item_ajax'),
+    path('json/', get_items_json, name='get_items_json'), # <-- Tambahkan ini
+    path('xml/', get_items_xml, name='get_items_xml')
 ]
